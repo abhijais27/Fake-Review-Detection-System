@@ -1,0 +1,95 @@
+{% extends 'base.html' %} 
+{% block content %}
+<script>
+$(document).on("click", ".delete-dialog", function () {
+  var id = $(this).data('id');
+	$("#recordID").val( id );
+});
+function delete_record(comment_id)
+{
+	location.href = "/products/comment-delete/"+$("#recordID").val();
+}
+$(function ()
+{
+		$('.rating').rating();
+});
+jQuery(document).ready(function() {
+	jQuery('#mydatatable').DataTable( 
+		{
+			dom: 'Bfrtip',
+			buttons: [
+				'copy', 'csv', 'excel', 'pdf', 'print'
+			]
+		}
+	);
+} );
+</script>
+    <!--breadcrumbs start-->
+    <div class="breadcrumbs">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-4 col-sm-4">
+            <h1>
+              {{ heading }}
+            </h1>
+          </div>
+        </div>
+      </div>
+    </div>
+<!-- //breadcrumbs -->
+
+<div class="container" style="width: 90%; max-width: none !important">
+		<div style="width: 100%">
+			{% if messages %}
+				<div class="alert alert-success fade in" style="margin:10px;">
+					{% for message in messages %}
+						<strong>{{ message }}</strong>
+					{% endfor %}
+				</div>
+		  {% endif %}
+		  <div style="width: 100%">
+			<form name="frm" action="lib/comment.php" method="post">
+			  <section class="panel">
+				<table id="mydatatable" class="table table-striped table-advance table-hover" style="color:#000000">
+						<thead>
+							<tr>
+								<th style="background-color:#34495e; color:#FFFFFF;">Sr. No.</th>
+								<th style="background-color:#34495e; color:#FFFFFF;">Comment Title</th>
+								<th style="background-color:#34495e; color:#FFFFFF;">IP Address</th>
+								<th style="background-color:#34495e; color:#FFFFFF;">Customer Name</th>
+								<th style="background-color:#34495e; color:#FFFFFF;">Contact</th>
+								<th style="background-color:#34495e; color:#FFFFFF;">Product</th>
+								<th style="background-color:#34495e; color:#FFFFFF;">Rating</th>
+								<th style="background-color:#34495e; color:#FFFFFF;">Post Date</th>
+								<th style="background-color:#34495e; color:#FFFFFF;">Action</th>
+							</tr>
+							</thead>
+							<tbody>
+							{% for comment in commentlist %}
+								<tr>
+									<td style="text-align:center; font-weight:bold;">{{ forloop.counter }}</td>
+									<td>{{ comment.comment_title }}</td>
+									<td>{{comment.comment_ip}}</td>
+									<td>{{comment.user_name}}</td>
+									<td>{{comment.user_mobile}}</td>
+									<td>{{comment.product_name}}</td>
+									<td><input type="text" class="rating rating5" readonly value="{{comment.comment_rating}}" /></td>
+									<td>{{comment.comment_date}}</td>
+									<td>
+											<div class="btn-group">
+												<a href="/products/comment-details/{{comment.comment_id}}" class="btn btn-success">View</a>
+												<a class="delete-dialog btn btn-danger" data-id="{{comment.comment_id}}" data-toggle="modal" href="#myModal-2">Delete</a>
+											</div>
+									</td>
+								</tr>
+							{% endfor %}	
+						</tbody>
+					</table>
+				<input type="hidden" name="act" />
+			  <input type="hidden" name="comment_id" id="recordID" />
+	</form>
+</div>
+</div>
+</div>
+</div>
+{% endblock content %}
